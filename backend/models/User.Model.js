@@ -13,6 +13,12 @@ const userSchema=mongoose.Schema({
         min:3,
         max:30
     },
+    Phone:{
+        type:String,
+        required:true,
+        min:10,
+        max:10
+    },
     Password:{
         type:String,
         required:true,

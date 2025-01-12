@@ -8,6 +8,11 @@ const emailValidator=[
     .isString()
     .isLength({min:3,max:26})
     .withMessage("Please enter proper name"),
+    body('phone')
+    .isString()
+    .withMessage("Please enter valid phone number")
+    .isLength({min:10,max:10})
+    .withMessage("Please enter valid phone number"),
     body('password')
     .isString()
     .isLength({min:5,max:16})

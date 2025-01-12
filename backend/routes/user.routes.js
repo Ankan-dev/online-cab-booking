@@ -2,7 +2,7 @@ const express=require('express')
 const {emailValidator}=require('../middleware/validator/registerValidator.js')
 const {loginValidator}=require('../middleware/validator/loginValidator.js')
 const {registerUser,loginUser,profile,logout}=require("../controllers/userControllers.js")
-const authenticate=require('../middleware/auth/auth.js');
+const authenticate=require('../middleware/auth/UserAuth.js');
 
 const Router=express.Router();
 

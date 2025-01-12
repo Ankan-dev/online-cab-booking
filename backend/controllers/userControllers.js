@@ -8,7 +8,7 @@ const {encryptToken}=require('../utils/EncryptAndDcryptToken.js')
 
 
 const registerUser=asyncHandler(async(req,res)=>{
-    const {email,name,password}=req.body
+    const {email,name,phone,password}=req.body
         const checkUser=await User.findOne({Email:email});
         if(checkUser){
            throw new ApiError(409,"User already exists");
@@ -19,6 +19,7 @@ const registerUser=asyncHandler(async(req,res)=>{
         const createUser=new User({
             Email:email,
             FullName:name,
+            Phone:phone,
             Password:hashPassword
         })
 
