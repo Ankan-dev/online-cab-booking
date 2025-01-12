@@ -4,7 +4,7 @@ const cors=require('cors');
 const cookieParser=require('cookie-parser');
 const connectDataBase=require('./database/connDb.js')
 const userRouter=require('./routes/user.routes.js');
-
+const captainRouter=require('./routes/captain.routes.js');
 
 const app=express();
 
@@ -16,6 +16,7 @@ app.use(express.urlencoded({limit:'16kb',extended:true}))
 
 
 app.use('/app',userRouter);
+app.use('/app',captainRouter);
 
 
 const port=process.env.PORT || 3000;

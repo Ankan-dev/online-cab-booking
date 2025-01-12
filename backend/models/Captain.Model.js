@@ -34,7 +34,7 @@ const captainSchema=mongoose.Schema({
         min:3,
         max:30
     },
-    phone:{
+    Phone:{
         type:String,
         required:true
     },
