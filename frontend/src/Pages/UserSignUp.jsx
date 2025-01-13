@@ -1,7 +1,14 @@
-import React from 'react'
+import React, { useState } from 'react'
 import bg from '../assets/cabBG.jpeg'
 
 const UserSignUp = () => {
+
+const [fullname,setfullname]=useState('');
+const [email,setemail]=useState('');
+const [phone,setphone]=useState('');
+const [password,setpassword]=useState('');
+
+
   return (
     <div className="flex justify-center items-center min-h-screen bg-[#2c2c36] text-white">
   <div className="flex items-center justify-center w-full h-[100vh] rounded-[10px] bg-cover bg-no-repeat" style={{ backgroundImage: `url(${bg})` }}>
