@@ -1,6 +1,7 @@
 import React,{useState} from 'react'
 import bg from '../assets/captainCabBg.jpeg'
 import { Link,useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const CaptainSignUp = () => {
 
@@ -10,7 +11,7 @@ const CaptainSignUp = () => {
     const [password, setpassword] = useState('');
     const navigate=useNavigate();
   
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
       e.preventDefault();
       const data={
         email:email,
@@ -19,7 +20,19 @@ const CaptainSignUp = () => {
         password:password
       }
   
-      console.log(data);
+      try {
+        
+        const response=await axios.post(`${import.meta.env.VITE_BASE_URL}/app/captain/register`,data,{withCredentials:true})
+
+        if(response && response.status===201){
+          console.log(response.data)
+          navigate('/captain-login')
+        }
+
+      } catch (error) {
+        throw error;
+      }
+
       setfullname('');
       setemail('');
       setphone('');

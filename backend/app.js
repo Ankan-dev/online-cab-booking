@@ -8,7 +8,7 @@ const captainRouter=require('./routes/captain.routes.js');
 
 const app=express();
 
-app.use(cors({origin:'*',credentials:true}));
+app.use(cors({origin:process.env.BASE_URL,credentials:true}));
 app.use(cookieParser());
 
 app.use(express.json({limit:'16kb'}));

@@ -1,20 +1,30 @@
 import React,{useState} from 'react'
 import bg from '../assets/captainCabBg.jpeg'
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 const CaptainLogin = () => {
 
   const [email, setemail] = useState('');
   const [password, setpassword] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const data={
       email:email,
       password:password
     }
 
-    console.log(data);
+    try {
+      const response=await axios.post(`${import.meta.env.VITE_BASE_URL}/app/captain/login`,data,{withCredentials:true});
+
+      if(response && response.status===200){
+        console.log(response.data)
+      } 
+    } catch (error) {
+      throw error
+    }
+   
     setemail('');
     setpassword('');
   }

@@ -1,19 +1,33 @@
-import React,{useState} from 'react'
+import React, { useState } from 'react'
 import bg from '../assets/cabBG.jpeg'
 import { Link } from 'react-router-dom';
+import axios from 'axios';
+
 
 const UserLogin = () => {
   const [email, setemail] = useState('');
   const [password, setpassword] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const data={
-      email:email,
-      password:password
+    const data = {
+      email: email,
+      password: password
     }
 
-    console.log(data);
+
+    try {
+      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/app/user/login`, data, { withCredentials: true })
+
+      if (response && response.status === 200) {
+        console.log(response.data)
+        
+      }
+
+    } catch (error) {
+      throw error
+    }
+
     setemail('');
     setpassword('');
   }
@@ -29,7 +43,7 @@ const UserLogin = () => {
                 type="email"
                 placeholder="email"
                 value={email}
-                onChange={(e)=>setemail(e.target.value)}
+                onChange={(e) => setemail(e.target.value)}
                 className="w-full h-[50px] bg-transparent outline-none border-[2px] border-[rgba(255,255,255,0.2)] rounded-[40px] text-[16px] text-white px-[20px] pr-[45px]"
               />
               <i className="bx bxs-user absolute right-[20px] top-1/2 transform -translate-y-1/2"></i>
@@ -39,7 +53,7 @@ const UserLogin = () => {
                 type="password"
                 placeholder="Password"
                 value={password}
-                onChange={(e)=>setpassword(e.target.value)}
+                onChange={(e) => setpassword(e.target.value)}
                 className="w-full h-[50px] bg-transparent  outline-none border-[2px] border-[rgba(255,255,255,0.2)] rounded-[40px] text-[16px] text-white px-[20px] pr-[45px]"
               />
               <i className="bx bxs-lock-alt absolute right-[20px] top-1/2 transform -translate-y-1/2"></i>

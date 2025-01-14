@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import bg from '../assets/cabBG.jpeg'
 import { Link,useNavigate } from 'react-router-dom'
+import axios from 'axios'
 
 const UserSignUp = () => {
 
@@ -10,7 +11,7 @@ const UserSignUp = () => {
   const [password, setpassword] = useState('');
   const navigate=useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const data={
       email:email,
@@ -19,7 +20,17 @@ const UserSignUp = () => {
       password:password
     }
 
-    console.log(data);
+    try {
+      const response= await axios.post(`${import.meta.env.VITE_BASE_URL}/app/user/register`,data);
+      if(response && response.status===201){
+        console.log(response.data);
+        navigate('/user-login');
+      }
+    } catch (error) {
+      throw error;
+    }
+    
+
     setfullname('');
     setemail('');
     setphone('');
