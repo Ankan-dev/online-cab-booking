@@ -28,6 +28,16 @@ const userSchema=mongoose.Schema({
     ProfileImage:{
         type:String
     },
+    otp:{
+        type:String
+    },
+    otpExpires:{
+        type:Date
+    },
+    verified:{
+        type:Boolean,
+        default:false
+    },
     RefreshToken:{
         type:String
     },

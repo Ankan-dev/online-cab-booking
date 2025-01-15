@@ -64,6 +64,16 @@ const captainSchema=mongoose.Schema({
             type:Number
         }
     },
+    otp:{
+        type:String
+    },
+    otpExpires:{
+        type:Date
+    },
+    verified:{
+        type:Boolean,
+        default:false
+    },
     RefreshToken:{
         type:String
     },
