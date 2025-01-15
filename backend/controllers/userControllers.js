@@ -80,10 +80,12 @@ const registerUser=asyncHandler(async(req,res)=>{
         findUser.verified=true;
         await findUser.save();
 
-        delete findUser.Password;
-        delete findUser.RefreshToken;
-        delete findUser.otp;
-        delete findUser.otpExpires;
+        const userData=findUser.toObject();
+
+        delete userData.Password;
+        delete userData.RefreshToken;
+        delete userData.otp;
+        delete userData.otpExpires;
 
         const options={
             httpOnly:true,
@@ -93,7 +95,7 @@ const registerUser=asyncHandler(async(req,res)=>{
 
         return res.status(200)
                 .cookie("AccessToken",Token,options)
-                .json(new ApiResponse(200,findUser,"Email verified and loggedin successfully"))
+                .json(new ApiResponse(200,userData,"Email verified and loggedin successfully"))
 
     })
 
@@ -117,10 +119,12 @@ const registerUser=asyncHandler(async(req,res)=>{
         findUser.RefreshToken=Token;
         await findUser.save();
 
-        delete findUser.Password;
-        delete findUser.RefreshToken;
-        delete findUser.otp;
-        delete findUser.otpExpires;
+        const userData=findUser.toObject();
+
+        delete userData.Password;
+        delete userData.RefreshToken;
+        delete userData.otp;
+        delete userData.otpExpires;
 
         const options={
             httpOnly:true,
@@ -129,10 +133,7 @@ const registerUser=asyncHandler(async(req,res)=>{
 
         return res.status(200)
                 .cookie("AccessToken",Token,options)
-                .json(new ApiResponse(200,{
-                    Name:findUser.FullName,
-                    profile_Image:findUser.ProfileImage
-                },"User is loggedin Successfully"))
+                .json(new ApiResponse(200,userData,"User is loggedin Successfully"))
     })
 
     
@@ -144,7 +145,7 @@ const registerUser=asyncHandler(async(req,res)=>{
                     .json(new ApiError(404,'UserId is missing'));
         }
 
-        const getProfileData=await User.findById(userId).select('-Password -RefreshToken');
+        const getProfileData=await User.findById(userId).select('-Password -RefreshToken -otp -otpExpires -verified');
 
         if(!getProfileData){
             return res.status(500)

@@ -3,8 +3,10 @@ const bcrypt = require('bcrypt');
 const {ApiError} = require('../utils/ApiError.js');
 const {ApiResponse} = require('../utils/ApiResponse.js');
 const {encryptToken} = require('../utils/EncryptAndDcryptToken.js');
+const asyncHandler=require('../utils/AsyncHandler.js');
+const {sendEmail}=require('../utils/sendEmail.js');
 
-const registerCaptain = async (req, res) => {
+const registerCaptain = asyncHandler(async (req, res) => {
     const { email, name, phone, password } = req.body;
     const checkCaptain = await captainModel.findOne({ Email: email });
     if (checkCaptain) {
@@ -27,10 +29,20 @@ const registerCaptain = async (req, res) => {
 
     await createCaptain.save();
 
-    return res.status(201)
-        .json(new ApiResponse(201, "", "Captain created successfully"));
+    const subject="Verify your email address";
+    const text=`Your OTP is ${otp}. It will expire in 5 minutes. Do not share this OTP with anyone.`;
+    
+    const emailstatus=sendEmail(email,subject,text);
 
-}
+    if(!emailstatus){
+        return res.status(500)
+                .json(new ApiError(500,"Email not sent"))
+    }
+
+    return res.status(201)
+        .json(new ApiResponse(201, "", "Captain created successfully. Please check your email for your code"));
+
+})
 
 const verifyCaptain=asyncHandler(async(req,res)=>{
 
@@ -45,7 +57,7 @@ const verifyCaptain=asyncHandler(async(req,res)=>{
 
     const currentTime=Date.now();
 
-    if(currentTime>findUser.otpExpires){
+    if(currentTime>findCaptain.otpExpires){
         findCaptain.otp=null;
         findCaptain.otpExpires=null;
         await findCaptain.save();
@@ -70,19 +82,22 @@ const verifyCaptain=asyncHandler(async(req,res)=>{
         httpOnly: true,
         secure: true
     }
-   
-    delete findCaptain.Password;
-    delete findCaptain.RefreshToken;
-    delete findCaptain.otp;
-    delete findCaptain.otpExpires;
+    
+    
+
+    const captainData = findCaptain.toObject();
+    delete captainData.Password;
+    delete captainData.RefreshToken;
+    delete captainData.otp;
+    delete captainData.otpExpires;
 
     return res.status(200)
             .cookie("AccessToken", Token, options)
-            .json(new ApiResponse(200,findCaptain,"Email verified and loggedin successfully"))
+            .json(new ApiResponse(200,captainData,"Email verified and loggedin successfully"))
 
 })
 
-const loginCaptain = async (req, res) => {
+const loginCaptain = asyncHandler(async (req, res) => {
     const { email, password } = req.body;
     const findCaptain = await captainModel.findOne({ Email:email });
     if (!findCaptain) {
@@ -108,19 +123,22 @@ const loginCaptain = async (req, res) => {
         secure: true
     }
 
-    delete findCaptain.Password;
-    delete findCaptain.RefreshToken;
-    delete findCaptain.otp;
-    delete findCaptain.otpExpires;
+    
+
+    const captainData = findCaptain.toObject();
+    delete captainData.Password;
+    delete captainData.RefreshToken;
+    delete captainData.otp;
+    delete captainData.otpExpires;
 
     return res.status(200)
         .cookie("AccessToken", Token, options)
-        .json(new ApiResponse(200, findCaptain, "Login successful"));
-}
+        .json(new ApiResponse(200, captainData, "Login successful"));
+})
 
-const getCaptainProfile = async (req, res) => {
+const getCaptainProfile = asyncHandler( async (req, res) => {
     const captainId = req.captain_id;
-    const findCaptain = await captainModel.findById(captainId).select("-Password -RefreshToken");
+    const findCaptain = await captainModel.findById(captainId).select("-Password -RefreshToken -otp -otpExpires");
     if (!findCaptain) {
         return res.status(404)
             .json(new ApiError(404, "Captain not found"));
@@ -129,9 +147,9 @@ const getCaptainProfile = async (req, res) => {
     return res.status(200)
         .json(new ApiResponse(200, findCaptain, "Captain profile fetched successfully"));
 
-}
+})
 
-const logoutCaptain = async (req, res) => {
+const logoutCaptain = asyncHandler(async (req, res) => {
     const captainId=req.captain_id;
     const findCaptain=await captainModel.findById(captainId);
 
@@ -152,5 +170,5 @@ const logoutCaptain = async (req, res) => {
             .clearCookie("AccessToken",options)
             .json(new ApiResponse(200,"","Captain logged out successfully"));
 
-}
+})
 module.exports = { registerCaptain, loginCaptain ,getCaptainProfile,logoutCaptain,verifyCaptain};
