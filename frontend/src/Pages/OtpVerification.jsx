@@ -1,5 +1,5 @@
-import React,{useState} from 'react'
-import { Meta, useLocation } from 'react-router-dom';
+import React,{useState,useRef,useEffect} from 'react'
+import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 
 const OtpVerification = () => {
@@ -8,11 +8,27 @@ const OtpVerification = () => {
   const location=useLocation();
 
   const {email,role}=location.state || {};
+
+  const one=useRef(null);
+  const two=useRef(null);
+  const three=useRef(null);
+  const four=useRef(null);
+  const five=useRef(null);
+
+
+  useEffect(()=>{
+    one.current.focus();
+
+  },[])
   
-  const getOtp=(e)=>{
+  const getOtp=(e,shiftReference)=>{
     const previousInputs=otp;
     let NewInput=previousInputs+e.target.value;
     setOtp(NewInput);
+
+    if(NewInput,shiftReference){
+      shiftReference.current.focus();
+    }
   }
 
   const handleSubmit= async(e)=>{
@@ -41,30 +57,35 @@ const OtpVerification = () => {
     <h1 className="title text-2xl mb-8">Enter OTP</h1>
     <form id="otp-form" className="w-full flex gap-5 items-center justify-center">
       <input
+        ref={one}
         type="text"
         className="otp-input border-2 border-yellow-400  text-black text-4xl text-center p-2 w-full max-w-[70px] h-[70px] rounded-md outline-none  "
         maxLength={1}
-        onChange={getOtp}
+        onChange={(e)=>getOtp(e,two)}
       />
       <input
+        ref={two}
         type="text"
         className="otp-input border-2 border-yellow-400  text-black text-4xl text-center p-2 w-full max-w-[70px] h-[70px] rounded-md outline-none  "
         maxLength={1}
-        onChange={getOtp}
+        onChange={(e)=>getOtp(e,three)}
       />
       <input
+        ref={three}
         type="text"
         className="otp-input border-2 border-yellow-400  text-black text-4xl text-center p-2 w-full max-w-[70px] h-[70px] rounded-md outline-none  "
         maxLength={1}
-        onChange={getOtp}
+        onChange={(e)=>getOtp(e,four)}
       />
       <input
+        ref={four}
         type="text"
         className="otp-input border-2 border-yellow-400  text-black text-4xl text-center p-2 w-full max-w-[70px] h-[70px] rounded-md outline-none  "
         maxLength={1}
-        onChange={getOtp}
+        onChange={(e)=>getOtp(e,five)}
       />
       <input
+        ref={five}
         type="text"
         className="otp-input border-2 border-yellow-400  text-black text-4xl text-center p-2 w-full max-w-[70px] h-[70px] rounded-md outline-none  "
         maxLength={1}
