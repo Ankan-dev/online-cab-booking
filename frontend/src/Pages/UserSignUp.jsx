@@ -24,7 +24,7 @@ const UserSignUp = () => {
       const response= await axios.post(`${import.meta.env.VITE_BASE_URL}/app/user/register`,data);
       if(response && response.status===201){
         console.log(response.data);
-        navigate('/user-login');
+        navigate('/verify',{state:{email:email,role:"user"}});
       }
     } catch (error) {
       throw error;

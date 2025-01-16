@@ -26,7 +26,7 @@ const CaptainSignUp = () => {
 
         if(response && response.status===201){
           console.log(response.data)
-          navigate('/captain-login')
+          navigate('/verify',{state:{email:email,role:"captain"}});
         }
 
       } catch (error) {
