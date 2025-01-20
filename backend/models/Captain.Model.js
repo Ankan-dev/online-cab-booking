@@ -55,7 +55,7 @@ const captainSchema=mongoose.Schema({
         required:true,
         default:'inactive'
    },
-    Vehicle:{vehicle},
+    Vehicle:vehicle,
     location:{
         latutude:{
             type:Number

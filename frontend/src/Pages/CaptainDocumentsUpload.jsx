@@ -1,6 +1,67 @@
-import React from 'react'
+import React,{useState} from 'react'
+import axios from 'axios'
 
 const CaptainDocumentsUpload = () => {
+
+  const [profile,setProfile]=useState(null);
+  const [license,setLicense]=useState(null);
+  const [documents,setDocuments]=useState(null);
+  const [vehicleColor,setVehicleColor]=useState("");
+  const [vehicleType,setVehicleType]=useState("");
+  const [numberPlate,setNumberPlate]=useState("");
+
+  const handleProfileChange=(e)=>{
+    setProfile(e.target.files[0]);
+  }
+
+  const handleLicenseChange=(e)=>{
+    setLicense(e.target.files[0]);
+  }
+
+  const handleDocumentsChange=(e)=>{
+    setDocuments(e.target.files[0]);
+  }
+
+  const handleColorChange=(e)=>{
+    setVehicleColor(e.target.value);
+  }
+
+  const handleTypeChange=(e)=>{
+    setVehicleType(e.target.value);
+  }
+
+  const handleNumberPlateChange=(e)=>{
+    setNumberPlate(e.target.value);
+  }
+
+  const handleSubmit= async(e)=>{
+    e.preventDefault();
+    
+    const formData=new FormData();
+
+    formData.append("avatar",profile);
+    formData.append("license",license);
+    formData.append("documents",documents);
+    formData.append("color",vehicleColor);
+    formData.append("type",vehicleType);
+    formData.append("noPlate",numberPlate);
+
+    try{
+      const response=await axios.post(`${import.meta.env.VITE_BASE_URL}/app/captain/captain-documents`,formData,{
+        headers:{
+          "Content-Type":"multipart/form-data"
+        },
+        withCredentials:true
+      },
+      );
+      console.log(response.data);
+
+    }catch(error){
+      throw error;
+    }
+
+  }
+
   return (
     <section className="flex flex-col items-center justify-center w-full min-h-screen bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 text-black">
        
@@ -23,6 +84,7 @@ const CaptainDocumentsUpload = () => {
               id="profileImage"
               name="ProfileImage"
               accept="image/*"
+              onChange={handleProfileChange}
               className="mt-1 block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             />
           </div>
@@ -38,7 +100,8 @@ const CaptainDocumentsUpload = () => {
               type="file"
               id="driversLicense"
               name="DriversLicense"
-              accept="image/*"
+              accept="image/*,application/pdf"
+              onChange={handleLicenseChange}
               className="mt-1 block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             />
           </div>
@@ -54,7 +117,8 @@ const CaptainDocumentsUpload = () => {
               type="file"
               id="otherDocuments"
               name="OtherDocuments"
-              accept="image/*"
+              accept="application/pdf"
+              onChange={handleDocumentsChange}
               className="mt-1 block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             />
           </div>
@@ -71,6 +135,7 @@ const CaptainDocumentsUpload = () => {
               id="vehicleColor"
               name="VehicleColor"
               required
+              onChange={handleColorChange}
               className="mt-1 block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             />
           </div>
@@ -86,6 +151,7 @@ const CaptainDocumentsUpload = () => {
               id="vehicleType"
               name="VehicleType"
               required
+              onChange={handleTypeChange}
               className="mt-1 block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             >
               <option value="">Select Vehicle Type</option>
@@ -107,6 +173,7 @@ const CaptainDocumentsUpload = () => {
               id="numberPlate"
               name="NumberPlate"
               required
+              onChange={handleNumberPlateChange}
               className="mt-1 block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             />
           </div>
@@ -115,6 +182,7 @@ const CaptainDocumentsUpload = () => {
             <button
               type="submit"
               className="bg-yellow-400 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2"
+              onClick={handleSubmit}
             >
               Submit
             </button>

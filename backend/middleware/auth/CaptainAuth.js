@@ -5,6 +5,7 @@ const {ApiError}=require('../../utils/ApiError.js')
 const authenticate=AsyncHandler(async(req,res,next)=>{
 
     const token=req.cookies?.AccessToken;
+    console.log(token)
 
 
     if(!token){

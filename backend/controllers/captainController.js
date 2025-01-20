@@ -5,6 +5,7 @@ const {ApiResponse} = require('../utils/ApiResponse.js');
 const {encryptToken} = require('../utils/EncryptAndDcryptToken.js');
 const asyncHandler=require('../utils/AsyncHandler.js');
 const {sendEmail}=require('../utils/sendEmail.js');
+const {uploadToCloudinary}=require('../utils/cloudinary.js');
 
 const registerCaptain = asyncHandler(async (req, res) => {
     const { email, name, phone, password } = req.body;
@@ -48,7 +49,10 @@ const verifyCaptain=asyncHandler(async(req,res)=>{
 
     const {email,otp}=req.body;
 
+    
+
     const findCaptain=await captainModel.findOne({Email:email});
+
 
     if(!findCaptain){
         return res.status(404)
@@ -171,4 +175,42 @@ const logoutCaptain = asyncHandler(async (req, res) => {
             .json(new ApiResponse(200,"","Captain logged out successfully"));
 
 })
-module.exports = { registerCaptain, loginCaptain ,getCaptainProfile,logoutCaptain,verifyCaptain};
+
+const captainDocumentsUploads=asyncHandler(async(req,res)=>{
+    const captainId=req.captain_id;
+    const {avatar,license,documents}=req.files;
+    const {color,type,noPlate}=req.body;
+    
+    const findCaptain=await captainModel.findById(captainId);
+
+    if(!findCaptain){
+        return res.status(404)
+                .json(new ApiError(404,"Captain not found"));
+    }
+
+    const uploadAvatar=await uploadToCloudinary(avatar[0].path);
+    const uploadLicense=await uploadToCloudinary(license[0].path);
+    const uploadDocuments=await uploadToCloudinary(documents[0].path);
+
+    if(!uploadAvatar || !uploadLicense || !uploadDocuments){
+        return res.status(500)
+                .json(new ApiError(500,"Error in uploading documents"));
+    }
+
+    const vehicle={
+        DriversLicense:uploadLicense,
+        OtherDocuments:uploadDocuments,
+        VehicleColor:color,
+        VehicleType:type,
+        NumberPlate:noPlate,
+    }
+
+    findCaptain.ProfileImage=uploadAvatar;
+    findCaptain.Vehicle=vehicle;
+
+    await findCaptain.save();
+
+    return res.status(200)
+            .json(new ApiResponse(200,"","Documents uploaded successfully"));
+})
+module.exports = { registerCaptain, loginCaptain ,getCaptainProfile,logoutCaptain,verifyCaptain,captainDocumentsUploads};
