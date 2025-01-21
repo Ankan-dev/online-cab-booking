@@ -1,5 +1,6 @@
 import React,{useState} from 'react'
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom';
 
 const CaptainDocumentsUpload = () => {
 
@@ -9,6 +10,8 @@ const CaptainDocumentsUpload = () => {
   const [vehicleColor,setVehicleColor]=useState("");
   const [vehicleType,setVehicleType]=useState("");
   const [numberPlate,setNumberPlate]=useState("");
+
+  const navigate=useNavigate();
 
   const handleProfileChange=(e)=>{
     setProfile(e.target.files[0]);
@@ -54,7 +57,11 @@ const CaptainDocumentsUpload = () => {
         withCredentials:true
       },
       );
-      console.log(response.data);
+      if(response && response.status===200){
+        navigate('/captain-home');
+      }else{
+        console.log("Some error occured in getting response");
+      }
 
     }catch(error){
       throw error;
