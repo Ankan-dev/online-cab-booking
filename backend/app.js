@@ -5,6 +5,7 @@ const cookieParser=require('cookie-parser');
 const connectDataBase=require('./database/connDb.js')
 const userRouter=require('./routes/user.routes.js');
 const captainRouter=require('./routes/captain.routes.js');
+const mapRouter=require('./routes/maps.routes.js')
 
 const app=express();
 
@@ -17,6 +18,7 @@ app.use(express.urlencoded({limit:'16kb',extended:true}))
 
 app.use('/app',userRouter);
 app.use('/app',captainRouter);
+app.use('/app',mapRouter);
 
 
 const port=process.env.PORT || 3000;
