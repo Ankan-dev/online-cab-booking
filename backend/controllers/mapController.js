@@ -2,6 +2,7 @@ const asyncHandler =require('../utils/AsyncHandler');
 const {ApiResponse}=require('../utils/ApiResponse');
 const {ApiError}=require('../utils/ApiError');
 const axios = require('axios');
+const getDistanceTime=require('../utils/GetDistanceTime.js')
 
 const getAddressCoordinates=asyncHandler(async(req,res)=>{
 
@@ -25,17 +26,14 @@ const getAddressCoordinates=asyncHandler(async(req,res)=>{
 
 })
 
-const getDistanceTime=asyncHandler(async(req,res)=>{
+const DistanceTime=asyncHandler(async(req,res)=>{
     const {origin,destination}=req.query
 
-    const url=`https://maps.googleapis.com/maps/api/distancematrix/json?destinations=${encodeURIComponent(destination)}&origins=${encodeURIComponent(origin)}&units=metric&key=${process.env.GOOGLE_MAPS}`
-
-  const response=await axios.get(url);
-  const data=response.data;
+  const data=await getDistanceTime(origin,destination);
 
   if(data.status==='OK'){
     return res.status(200)
-            .json(new ApiResponse(200,data.rows[0].elements[0],"distance and time fetched successfully"))
+            .json(new ApiResponse(200,data,"distance and time fetched successfully"))
   }else{
     throw new ApiError(500,"Internal server error");
   }
@@ -49,12 +47,15 @@ const getSuggestions=asyncHandler(async(req,res)=>{
     const response=await axios.get(uri);
     const data=response.data;
 
+    const APIRes=[];
+    APIRes.push(data.predictions.map(pre=>pre.description).filter(value=>value))
+
     if(data.status==='OK'){
         return res.status(200)
-                .json(new ApiResponse(200,data.predictions,"autocomplete options fetched successfullt"));
+                .json(new ApiResponse(200,APIRes,"autocomplete options fetched successfullt"));
     }else{
         throw new ApiError(500,"Internal Server Error");
     }
 })
 
-module.exports={getAddressCoordinates,getDistanceTime,getSuggestions}
+module.exports={getAddressCoordinates,DistanceTime,getSuggestions}
