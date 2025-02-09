@@ -31,4 +31,19 @@ const createRide=asyncHandler(async(req,res)=>{
             .json(new ApiResponse(201,{otp:otp},"Ride is created"));
 })
 
-module.exports={createRide}
+
+const getPrices=asyncHandler(async(req,res)=>{
+    const {pickup,destination}=req.query;
+
+
+    const prices=await calculateFare(pickup,destination);
+
+    if(!prices){
+        return ApiError(500,"Internal Server Error in calculation of fare");
+    }
+
+    return res.status(200)
+            .json(new ApiResponse(200,prices,"Prices fetched successfully"));
+})
+
+module.exports={createRide,getPrices}

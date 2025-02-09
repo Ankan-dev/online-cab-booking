@@ -162,9 +162,9 @@ const CaptainDocumentsUpload = () => {
               className="mt-1 block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             >
               <option value="">Select Vehicle Type</option>
-              <option value="Car">Car</option>
-              <option value="Bike">Bike</option>
-              <option value="Autorickshaw">Autorickshaw</option>
+              <option value="Car">Cab</option>
+              <option value="Bike">Moto</option>
+              <option value="Autorickshaw">Auto</option>
             </select>
           </div>
           {/* Number Plate */}

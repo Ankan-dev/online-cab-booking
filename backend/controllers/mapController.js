@@ -51,11 +51,11 @@ const getSuggestions=asyncHandler(async(req,res)=>{
     APIRes.push(data.predictions.map(pre=>pre.description).filter(value=>value))
 
     if(data.status==='OK'){
+        console.log(APIRes)
         return res.status(200)
                 .json(new ApiResponse(200,APIRes,"autocomplete options fetched successfullt"));
-    }else{
-        throw new ApiError(500,"Internal Server Error");
     }
+    
 })
 
 module.exports={getAddressCoordinates,DistanceTime,getSuggestions}

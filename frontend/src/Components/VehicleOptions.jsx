@@ -5,11 +5,10 @@ import Cab from '../assets/Cab.webp'
 import { IoPerson } from "react-icons/io5";
 
 
-const VehicleOptions = ({setVehicleChosen,setRideConfirmed,setHeight}) => {
+const VehicleOptions = ({setVehicleChosen,setHeight,prices}) => {
 
   const setRide=(ride)=>{
     setVehicleChosen(ride);
-    setRideConfirmed(true)
     setHeight("0%")
   }
 

@@ -14,7 +14,7 @@ const vehicle =mongoose.Schema({
     VehicleType:{
         type:String,
         required:true,
-        enum:['Car','Bike','Autorickshaw']
+        enum:['Cab','Moto','Auto']
     },
     NumberPlate:{
         type:String,
